@@ -35,6 +35,7 @@ class MainActivity : ComponentActivity() {
                     contentAlignment = Alignment.Center
                 ){
                     SetNavGraph()
+
                 }
             }
         }

@@ -19,6 +19,5 @@ object DomainModule {
     @Singleton
  fun provideGetQuizzesUseCases(quizRepositry: QuizRepositry) : GetQuizzesUseCases {
      return GetQuizzesUseCases(quizRepositry)
-
  }
 }

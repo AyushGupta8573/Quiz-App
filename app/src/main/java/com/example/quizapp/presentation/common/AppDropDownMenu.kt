@@ -1,13 +1,11 @@
 package com.example.quizapp.presentation.common
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -38,12 +36,10 @@ fun AppDropDownMenu(
     menuName: String,
     menuList: List<String>,
     text: String,
-    onDropDownClick : (String) -> Unit
+    onDropDownClick: (String) -> Unit
 ) {
-
-    var isExpanded: Boolean by remember {
-        mutableStateOf(false)
-    }
+    var expanded by remember { mutableStateOf(false) }
+    var selectedText by remember { mutableStateOf(text) }
 
     Column(
         modifier = Modifier
@@ -54,51 +50,40 @@ fun AppDropDownMenu(
             text = menuName,
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
-            color = colorResource(id = R.color.blue_gray),
+            color = colorResource(id = R.color.blue_gray)
         )
 
         Spacer(modifier = modifier.height(SmallSpacerHeight))
 
         ExposedDropdownMenuBox(
-            expanded = isExpanded,
-            onExpandedChange = { isExpanded = !isExpanded }
+            expanded = expanded,
+            onExpandedChange = { expanded = !expanded }
         ) {
             OutlinedTextField(
                 modifier = modifier
                     .menuAnchor()
                     .fillMaxWidth(),
-                value = text,
-                onValueChange = {},
                 readOnly = true,
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
-                },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedTextColor = colorResource(id = R.color.blue_gray),
-                    unfocusedTextColor = colorResource(id = R.color.blue_gray),
-                    unfocusedTrailingIconColor = colorResource(id = R.color.orange),
-                    focusedTrailingIconColor = colorResource(id = R.color.orange),
-                    focusedBorderColor = colorResource(id = R.color.dark_slate_blue),
-                    unfocusedBorderColor = colorResource(id = R.color.dark_slate_blue),
-                    containerColor = colorResource(id = R.color.dark_slate_blue)
+                value = selectedText,
+                onValueChange = { },
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                colors = TextFieldDefaults.colors(
+                     colorResource(id = R.color.blue_gray)
                 ),
                 shape = RoundedCornerShape(15.dp)
             )
-            DropdownMenu(
-                modifier = Modifier
-                    .background(colorResource(id = R.color.mid_night_blue)),
-                expanded = isExpanded,
-                onDismissRequest = { isExpanded = false },
-            )
-            {
-                menuList.forEachIndexed { index: Int, text: String ->
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                menuList.forEach { selectionOption ->
                     DropdownMenuItem(
-                        text = { Text(text = text, color = colorResource(id = R.color.blue_gray)) },
+                        text = { Text(selectionOption) },
                         onClick = {
-                            onDropDownClick(menuList[index])
-                            isExpanded = false
-                        },
-                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                            selectedText = selectionOption
+                            expanded = false
+                            onDropDownClick(selectionOption)
+                        }
                     )
                 }
             }
@@ -106,10 +91,14 @@ fun AppDropDownMenu(
     }
 }
 
-@Preview
-@Composable
-private fun AppDropDownMenuPreview() {
 
-    val list: List<String> = listOf("Item 1", "Item 2")
-    AppDropDownMenu(menuName = "Drop Down", menuList = list, text = "item 2", onDropDownClick = {})
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview() {
+    AppDropDownMenu(
+        menuName = "Category",
+        menuList = listOf("Easy", "Medium", "Hard"),
+        text = "Easy",
+        onDropDownClick = {}
+    )
 }
