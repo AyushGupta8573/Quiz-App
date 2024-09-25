@@ -15,7 +15,6 @@ import com.example.quizapp.presentation.home.HomeScreen
 import com.example.quizapp.presentation.home.HomeScreenViewModel
 import com.example.quizapp.presentation.quiz.QuizScreen
 import com.example.quizapp.presentation.quiz.QuizViewModel
-import com.example.quizapp.presentation.util.Constants.type
 
 @Composable
 fun SetNavGraph(

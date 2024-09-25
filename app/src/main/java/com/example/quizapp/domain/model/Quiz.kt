@@ -1,6 +1,6 @@
 package com.example.quizapp.domain.model
 
-data class Quiz (
+data class Quiz(
     val category: String,
     val correct_answer: String,
     val difficulty: String,

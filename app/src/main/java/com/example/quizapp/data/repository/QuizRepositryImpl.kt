@@ -14,7 +14,8 @@ class QuizRepositryImpl (
         difficulty: String,
         type: String
     ): List<Quiz> {
-        return quizApi.getQuizzes(amount, category, difficulty, type).results
-
+        val rsp =  quizApi.getQuizzes(amount, category, difficulty, type).results
+        Log.d("quiz", rsp.toString())
+        return rsp
     }
 }

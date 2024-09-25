@@ -4,6 +4,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 object Dimens {
+    val SmallTextSize = 18.sp
     val MediumTextSize = 26.sp
     val LargeTextSize = 40.sp
 
@@ -33,7 +34,9 @@ object Dimens {
 
     val SmallCircleShape = 90.dp
 
-    val SmallSpacerWidth = 8.dp
+    val SmallBorderWidth = 8.dp
+
+    val SmallSpacerWidth = 16.dp
 
     val LargeLottieAnimSize = 100.dp
 }
