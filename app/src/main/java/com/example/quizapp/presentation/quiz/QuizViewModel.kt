@@ -1,7 +1,6 @@
 package com.example.quizapp.presentation.quiz
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quizapp.common.Resource
@@ -23,7 +22,42 @@ class QuizViewModel @Inject constructor(private val getQuizzesUseCases: GetQuizz
             is EventQuizScreen.GetQuizzes -> {
                 getQuizzes(event.numOfQuizzes, event.category, event.difficulty, event.type)
             }
+
+            is EventQuizScreen.SetOptionSelected -> {
+                updateQuizStateList(event.quizStateIndex, event.selectedOption)
+            }
             else -> {}
+        }
+    }
+
+    private fun updateQuizStateList(quizStateIndex: Int, selectedOption: Int) {
+
+        val updatedQuizStateList = mutableListOf<QuizState>()
+        quizList.value.quizState.forEachIndexed { index, quizState ->
+            updatedQuizStateList.add(
+                if (quizStateIndex == index) {
+                    quizState.copy(selectedOptions = selectedOption)
+                } else {
+                    quizState
+                }
+            )
+        }
+        _quizList.value = quizList.value.copy(quizState = updatedQuizStateList)
+
+        updateScore(_quizList.value.quizState[quizStateIndex])
+    }
+
+    private fun updateScore(quizState: QuizState) {
+        if (quizState.selectedOptions != -1){
+            val correctAnswer = quizState.quiz!!.correct_answer
+            val selectedAnswer = quizState.selectedOptions?.let {
+                quizState.shuffledOptions[it].replace("&quot;", "\"").replace("&#039;","\'")
+            }
+            Log.d("check", "$correctAnswer -> $selectedAnswer")
+            if (correctAnswer == selectedAnswer){
+                val previousScore = _quizList.value.score
+                _quizList.value = quizList.value.copy(score = previousScore + 1)
+            }
         }
     }
 

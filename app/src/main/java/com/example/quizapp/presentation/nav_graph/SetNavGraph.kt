@@ -15,6 +15,7 @@ import com.example.quizapp.presentation.home.HomeScreen
 import com.example.quizapp.presentation.home.HomeScreenViewModel
 import com.example.quizapp.presentation.quiz.QuizScreen
 import com.example.quizapp.presentation.quiz.QuizViewModel
+import com.example.quizapp.presentation.score.ScoreScreen
 
 @Composable
 fun SetNavGraph(
@@ -56,8 +57,25 @@ fun SetNavGraph(
                 quizDifficulty = difficulty!!,
                 quizType = type!!,
                 event = quizViewModel::onEvent,
-                state = state
+                state = state,
+                navController = navController
                 )
+        }
+
+        composable(
+            route = Routes.ScoreScreen.route,
+            arguments = listOf(
+                navArgument(NOQ_KEY){type = NavType.IntType},
+                navArgument(CORRECT_ANS_KEY){type = NavType.IntType}
+            ),
+        ) {
+            val numOfQuestions = it.arguments?.getInt(NOQ_KEY)
+            val numOfCorrectAns = it.arguments?.getInt(CORRECT_ANS_KEY)
+            ScoreScreen(
+                numOfQuestions = numOfQuestions!!,
+                numOfCorrectAns = numOfCorrectAns!!,
+                navController = navController
+            )
         }
     }
 }

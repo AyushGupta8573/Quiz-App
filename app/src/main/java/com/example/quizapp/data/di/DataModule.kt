@@ -2,7 +2,7 @@ package com.example.quizapp.data.di
 
 import com.example.quizapp.data.repository.QuizRepositryImpl
 import com.example.quizapp.data.retrofit.QuizApi
-import com.example.quizapp.domain.repository.QuizRepositry
+import com.example.quizapp.domain.repository.QuizRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,13 +13,15 @@ import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
-object DataModule {
 
+
+object DataModule {
+    private const val BASE_URL = "https://opentdb.com/"
     @Provides
     @Singleton
     fun provideQuizApi(): QuizApi{
         return Retrofit.Builder()
-            .baseUrl("https://opentdb.com/")
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(QuizApi::class.java)
@@ -27,7 +29,7 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideQuizRepository(quizApi: QuizApi) : QuizRepositry {
+    fun provideQuizRepository(quizApi: QuizApi) : QuizRepository {
         return QuizRepositryImpl(quizApi)
     }
 }

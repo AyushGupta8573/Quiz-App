@@ -107,7 +107,7 @@ fun ShimmerEffectQuizInterface(
                         .clip(RoundedCornerShape(Dimens.LargeCornerRadius))
                         .shimmerEffect()
                 )
-                Spacer(modifier = Modifier.height(Dimens.SmallSpacerWidth))
+                Spacer(modifier = Modifier.padding(Dimens.SmallSpacerWidth))
                 Box(
                     modifier = modifier
                         .weight(0.5f)

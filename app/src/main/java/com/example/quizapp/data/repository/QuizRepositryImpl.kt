@@ -3,11 +3,11 @@ package com.example.quizapp.data.repository
 import android.util.Log
 import com.example.quizapp.data.retrofit.QuizApi
 import com.example.quizapp.domain.model.Quiz
-import com.example.quizapp.domain.repository.QuizRepositry
+import com.example.quizapp.domain.repository.QuizRepository
 
 class QuizRepositryImpl (
     private val quizApi: QuizApi
-): QuizRepositry {
+): QuizRepository {
     override suspend fun getQuizzes(
         amount: Int,
         category: Int,

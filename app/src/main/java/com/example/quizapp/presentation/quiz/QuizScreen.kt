@@ -1,5 +1,7 @@
 package com.example.quizapp.presentation.quiz
 
+import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,11 +25,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import com.example.quizapp.R
 import com.example.quizapp.presentation.common.ButtonBox
 import com.example.quizapp.presentation.common.QuizAppBar
+import com.example.quizapp.presentation.nav_graph.Routes
 import com.example.quizapp.presentation.quiz.component.QuizInterface
 import com.example.quizapp.presentation.quiz.component.ShimmerEffectQuizInterface
 import com.example.quizapp.presentation.util.Dimens
@@ -46,8 +51,12 @@ fun QuizScreen(
     quizDifficulty: String,
     quizType: String,
     event: (EventQuizScreen) -> Unit,
-    state: StateQuizScreen
+    state: StateQuizScreen,
+    navController : NavController
 ) {
+    BackHandler {
+        gotoHome(navController)
+        }
 
     LaunchedEffect(key1 = Unit){
         val difficulty = when(quizDifficulty){
@@ -60,14 +69,18 @@ fun QuizScreen(
             "Multiple Choice" -> "multiple"
             else -> "boolean"
         }
-        event(EventQuizScreen.GetQuizzes(numOfQuiz, com.example.quizapp.presentation.util.Constants.categoriesMap[quizCategory]!!, quizDifficulty, type))
+        event(EventQuizScreen.GetQuizzes(numOfQuiz, com.example.quizapp.presentation.util.Constants.categoriesMap[quizCategory]!!, difficulty, type))
     }
     Column(
         modifier = modifier
             .fillMaxSize()
     ) {
         QuizAppBar(quizCategory = quizCategory) {
-
+            navController.navigate(Routes.HomeScreen.route){
+                popUpTo(Routes.HomeScreen.route){
+                    inclusive = true
+                }
+            }
         }
 
         Column(
@@ -103,15 +116,16 @@ fun QuizScreen(
             Spacer(modifier = modifier.height(LargeSpacerHeight))
 
             if (quizFetched(state)) {
+
                 val pagerState = rememberPagerState() { state.quizState.size }
 
                 HorizontalPager(state = pagerState) { index ->
                     QuizInterface(
-                        modifier = Modifier
-                            .weight(1f),
-                        onOptionSelected = {},
-                        qNumber = index + 1,
-                        quizState = state.quizState[index]
+                        modifier = Modifier,
+                        quizState = state.quizState[index],
+                        onOptionSelected = {selectedIndex ->
+                            event(EventQuizScreen.SetOptionSelected(index, selectedIndex))},
+                        qNumber = index + 1
                     )
                 }
 
@@ -133,7 +147,7 @@ fun QuizScreen(
                     }
                 }
                 Row(
-                    modifier = modifier
+                    modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = MediumPadding)
                         .navigationBarsPadding()
@@ -171,6 +185,8 @@ fun QuizScreen(
                     ) {
                         if (pagerState.currentPage == state.quizState.size - 1) {
                             //TODO
+                            navController.navigate(Routes.ScoreScreen.passNumOfQuestionsAndCorrectAns(state.quizState.size , state.score)) {
+                            }
                         } else {
                             scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
                         }
@@ -180,6 +196,7 @@ fun QuizScreen(
         }
     }
 }
+
 
 @Composable
 fun quizFetched(state: StateQuizScreen): Boolean {
@@ -200,15 +217,10 @@ fun quizFetched(state: StateQuizScreen): Boolean {
     }
 }
 
-@Preview
-@Composable
-private fun QuizScreenPreview() {
-    QuizScreen(
-        numOfQuiz = 12,
-        quizCategory = "GK",
-        quizDifficulty = "Easy",
-        quizType = "Multiple Choice",
-        event = {},
-        state = StateQuizScreen()
-    )
+fun gotoHome(navController: NavController) {
+    navController.navigate(Routes.HomeScreen.route) {
+        popUpTo(Routes.HomeScreen.route) {
+            inclusive = true
+        }
+    }
 }

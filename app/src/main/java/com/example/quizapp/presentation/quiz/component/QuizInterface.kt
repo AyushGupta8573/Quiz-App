@@ -43,7 +43,7 @@ fun QuizInterface(
                 Text(
                     modifier = Modifier
                         .weight(1f),
-                    text = "$qNumber",
+                    text = "$qNumber.",
                     color = colorResource(id = R.color.blue_gray),
                     fontSize = Dimens.SmallTextSize
                 )
@@ -69,13 +69,13 @@ fun QuizInterface(
                     "D" to quizState.shuffledOptions[3].replace("&quot;", "\"").replace("&#039;","\'")
                 )
                 Column {
-                    option.forEachIndexed { index, (optionNumber: String, optionText: String) ->
+                    option.forEachIndexed { index, (optionNumber, optionText) ->
                         if (optionText.isNotEmpty()) {
                           QuizOption(
                               optionNumber = optionNumber,
                               options = optionText,
-                              selected = false,
                               onOptionClick = { onOptionSelected(index) },
+                              selected = quizState.selectedOptions == index,
                               onUnselectOption = { onOptionSelected(-1) }
                           )
                         }
