@@ -1,6 +1,7 @@
 package com.example.quizapp.presentation.main_activity
 
 import android.os.Bundle
+import android.view.Window
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -24,7 +25,8 @@ class MainActivity : ComponentActivity() {
     lateinit var quizRepositry: QuizRepository
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
+        actionBar?.hide()
         installSplashScreen()
         setContent {
             QuizAppTheme {
@@ -35,7 +37,6 @@ class MainActivity : ComponentActivity() {
                     contentAlignment = Alignment.Center
                 ){
                     SetNavGraph()
-
                 }
             }
         }
