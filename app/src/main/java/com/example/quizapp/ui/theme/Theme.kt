@@ -19,7 +19,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
+    primary = Purple40,
     secondary = PurpleGrey80,
     tertiary = Pink80
 )
@@ -60,7 +60,7 @@ fun QuizAppTheme(
     if (!view.isInEditMode){
         SideEffect {
             val window :Window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
+            window.statusBarColor = StatusBar.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }

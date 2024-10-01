@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.quizapp.presentation.home.HomeScreen
 import com.example.quizapp.presentation.home.HomeScreenViewModel
+import com.example.quizapp.presentation.login.LoginScreen
 import com.example.quizapp.presentation.quiz.QuizScreen
 import com.example.quizapp.presentation.quiz.QuizViewModel
 import com.example.quizapp.presentation.score.ScoreScreen
@@ -24,7 +25,18 @@ fun SetNavGraph(
 
     val navController: NavHostController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = Routes.HomeScreen.route){
+    NavHost(navController = navController, startDestination = "login"){
+
+        composable ("login"){
+            LoginScreen (
+                onLoginSuccess = {
+                    navController.navigate(Routes.HomeScreen.route){
+                        popUpTo( 0 )
+                    }
+                }
+            )
+        }
+
         composable(route = Routes.HomeScreen.route){
             val viewModel : HomeScreenViewModel = hiltViewModel()
             val state by viewModel.homeState.collectAsState()
